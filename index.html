@@ -3,56 +3,59 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#08030a">
-  <meta name="description" content="A glowing heart made from I love you in 20 languages.">
+  <meta name="theme-color" content="#060208">
+  <meta name="description" content="A glowing heart built from love phrases in 20 languages, with Angel (Radio Edit) by Massive Attack.">
   <title>Love You ❤️</title>
   <style>
-    :root { color-scheme: dark; --pink: #ff597c; --muted: #c9aab7; }
+    :root { color-scheme: dark; --red: #f52f54; --pink: #ff8296; }
     * { box-sizing: border-box; }
-    html, body { width: 100%; min-height: 100%; margin: 0; }
+    html, body { width: 100%; height: 100%; margin: 0; }
     body {
-      min-height: 100svh; overflow: hidden; background: #08030a; color: #fff5f8;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow: hidden; background: #060208; color: #fff1f5;
+      font-family: Arial, "Noto Sans Thai", system-ui, sans-serif;
     }
-    .backdrop {
-      position: fixed; inset: 0; pointer-events: none; overflow: hidden;
-      background:
-        radial-gradient(ellipse at 50% 46%, rgba(105, 9, 43, .22), transparent 42%),
-        radial-gradient(ellipse at 50% 110%, rgba(55, 8, 39, .18), transparent 48%),
-        #08030a;
+    body::before {
+      content: ""; position: fixed; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse at 50% 46%, rgba(92, 0, 24, .16), transparent 48%), #060208;
     }
-    .backdrop::before, .backdrop::after {
-      content: ""; position: absolute; width: 26rem; height: 26rem; border-radius: 50%;
-      filter: blur(95px); opacity: .12; background: #ff174f;
-      animation: drift 9s ease-in-out infinite alternate;
-    }
-    .backdrop::before { left: -18rem; top: 12%; }
-    .backdrop::after { right: -18rem; bottom: 4%; background: #a40f69; animation-delay: -4s; }
-    main { position: relative; z-index: 1; min-height: 100svh; display: flex; flex-direction: column; align-items: center; }
-    .intro { position: absolute; top: clamp(1.1rem, 4vh, 2.8rem); z-index: 2; text-align: center; padding: 0 1rem; }
-    .eyebrow { margin: 0 0 .45rem; color: #ff8aa4; font-size: .7rem; letter-spacing: .28em; text-transform: uppercase; }
-    h1 { margin: 0; font-size: clamp(1.65rem, 4.6vw, 2.8rem); font-weight: 650; letter-spacing: -.04em; }
-    .subtitle { margin: .5rem 0 0; color: var(--muted); font-size: clamp(.78rem, 2vw, .96rem); }
-    canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
-    .footer { position: absolute; z-index: 2; bottom: max(1.25rem, env(safe-area-inset-bottom)); display: flex; flex-direction: column; align-items: center; gap: .8rem; padding: 0 1rem; text-align: center; }
+    #heart { position: fixed; inset: 0; display: block; width: 100%; height: 100%; }
     .replay {
-      border: 1px solid rgba(255, 119, 154, .4); background: rgba(45, 8, 25, .65); color: #ffeaf0;
-      border-radius: 999px; padding: .72rem 1.25rem; font: inherit; font-size: .9rem;
-      cursor: pointer; transition: transform .2s ease, background .2s ease, border-color .2s ease;
-      backdrop-filter: blur(10px);
+      position: fixed; z-index: 3; top: max(14px, env(safe-area-inset-top)); right: 14px;
+      padding: 9px 13px; border-radius: 999px; border: 1px solid rgba(255,115,145,.34);
+      color: #ffdce5; background: rgba(18,5,12,.72); font: inherit; font-size: 12px;
+      cursor: pointer; backdrop-filter: blur(10px);
     }
-    .replay:hover { transform: translateY(-2px); background: rgba(104, 15, 48, .75); border-color: #ff7d9d; }
-    .replay:focus-visible { outline: 2px solid #ff9db3; outline-offset: 4px; }
-    .signature { color: #927783; font-size: .72rem; letter-spacing: .06em; }
-    @keyframes drift { from { transform: translate3d(0,-10px,0) scale(.94); } to { transform: translate3d(15px,18px,0) scale(1.08); } }
+    .replay:hover { background: rgba(85,9,30,.82); }
+    .replay:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; }
+    .music {
+      position: fixed; z-index: 3; right: 15px; bottom: max(15px, env(safe-area-inset-bottom));
+      width: min(310px, calc(100vw - 30px)); padding: 10px 11px 8px;
+      border: 1px solid rgba(255, 94, 132, .25); border-radius: 15px;
+      background: rgba(10, 4, 9, .88); box-shadow: 0 8px 40px rgba(0,0,0,.28);
+      backdrop-filter: blur(12px);
+    }
+    .track-head { display: flex; align-items: center; gap: 8px; margin: 0 2px 7px; }
+    .music-dot {
+      width: 7px; height: 7px; flex: 0 0 7px; border-radius: 50%; background: #ff496e;
+      box-shadow: 0 0 10px rgba(255, 73, 110, .7);
+    }
+    .music.playing .music-dot { animation: heartbeat .72s ease-in-out infinite alternate; }
+    .track-title { min-width: 0; font-size: 11px; color: #ffe7ed; line-height: 1.4; }
+    .track-subtitle { color: #a88a96; font-size: 10px; margin-top: 1px; }
+    .music iframe { display: block; width: 100%; height: 85px; border: 0; border-radius: 8px; }
+    .music-link { display: block; margin: 5px 2px 0; color: #987f8a; font-size: 10px; text-decoration: none; }
+    .music-link:hover { color: #ffdce5; }
+    @keyframes heartbeat { from { transform: scale(.8); opacity: .7; } to { transform: scale(1.22); opacity: 1; } }
+    @media (max-width: 540px) {
+      .music { right: 50%; transform: translateX(50%); bottom: max(10px, env(safe-area-inset-bottom)); }
+      .music iframe { height: 74px; }
+      .replay { top: max(10px, env(safe-area-inset-top)); right: 10px; }
+    }
     @media (max-height: 560px) {
-      .intro { top: .65rem; }
-      .eyebrow { display: none; }
-      h1 { font-size: 1.45rem; }
-      .subtitle { margin-top: .2rem; font-size: .75rem; }
-      .footer { bottom: .45rem; gap: .35rem; }
-      .replay { padding: .45rem 1rem; }
-      .signature { display: none; }
+      .music { width: min(265px, calc(100vw - 24px)); right: 10px; bottom: 8px; padding: 7px; }
+      .music iframe { height: 65px; }
+      .track-head { margin-bottom: 4px; }
+      .track-subtitle, .music-link { display: none; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
@@ -60,105 +63,165 @@
   </style>
 </head>
 <body>
-  <div class="backdrop" aria-hidden="true"></div>
-  <main>
-    <header class="intro">
-      <p class="eyebrow">For someone special</p>
-      <h1>Made of love <span aria-hidden="true">♡</span></h1>
-      <p class="subtitle">One heart, twenty ways to say “I love you”.</p>
-    </header>
-    <canvas id="heart" role="img" aria-label="A glowing heart formed from love messages in 20 languages."></canvas>
-    <footer class="footer">
-      <button id="replay" class="replay" type="button">↻ &nbsp; ดูอีกครั้ง</button>
-      <div class="signature">A little love, in every language ❤️</div>
-    </footer>
-  </main>
+  <canvas id="heart" role="img" aria-label="A heart made of glowing I love you phrases in 20 languages."></canvas>
+  <button id="replay" class="replay" type="button">↻ Replay heart</button>
+
+  <aside id="music" class="music" aria-label="Music player">
+    <div class="track-head">
+      <span class="music-dot" aria-hidden="true"></span>
+      <div class="track-title">
+        Angel (Radio Edit)
+        <div class="track-subtitle">Massive Attack · feat. Horace Andy</div>
+      </div>
+    </div>
+    <iframe
+      id="soundcloud-player"
+      title="Play Angel (Radio Edit) by Massive Attack featuring Horace Andy on SoundCloud"
+      allow="autoplay"
+      loading="lazy"
+      src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fmassiveattack%2Fangel-radio-edit&amp;color=%23ff174f&amp;auto_play=false&amp;hide_related=true&amp;show_comments=false&amp;show_user=false&amp;show_reposts=false&amp;show_teaser=false&amp;visual=false">
+    </iframe>
+    <a class="music-link" href="https://soundcloud.com/massiveattack/angel-radio-edit" target="_blank" rel="noopener noreferrer">Open track on SoundCloud ↗</a>
+  </aside>
+
+  <script src="https://w.soundcloud.com/player/api.js"></script>
   <script>
     (() => {
       "use strict";
       const canvas = document.getElementById("heart");
       const ctx = canvas.getContext("2d");
       const replay = document.getElementById("replay");
+      const music = document.getElementById("music");
+      const playerFrame = document.getElementById("soundcloud-player");
       const phrases = [
-        "I love you", "Seni seviyorum", "Te amo", "Je t'aime",
-        "Ich liebe dich", "Ti amo", "Eu te amo", "Я тебя люблю",
-        "사랑해", "愛してる", "我爱你", "मैं तुमसे प्यार करता हूँ",
-        "Σ' αγαπώ", "Ik hou van jou", "Jag älskar dig", "Kocham cię",
+        "I love you", "love you", "I love you", "Te amo", "love you",
+        "Seni seviyorum", "Je t'aime", "I love you", "Ich liebe dich",
+        "Ti amo", "Eu te amo", "Я тебя люблю", "사랑해", "愛してる",
+        "我爱你", "मैं तुमसे प्यार करता हूँ", "Σ' αγαπώ",
+        "Ik hou van jou", "Jag älskar dig", "Kocham cię",
         "ฉันรักเธอ", "Anh yêu em", "Aku cinta kamu", "Я тебе кохаю"
       ];
-      const colors = ["#ff526e", "#ff6d86", "#ed315d", "#ff8296", "#fa3d68", "#ff9aab"];
       const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      let width = 0, height = 0, scale = 1, spots = [], startedAt = 0, raf = 0;
-      const random = (min, max) => min + Math.random() * (max - min);
-      const pick = values => values[Math.floor(Math.random() * values.length)];
+      let width = 0, height = 0, unit = 1, spots = [], raf = 0, startedAt = 0;
+      let musicPlaying = false, musicPosition = 0;
+      const rand = (a, b) => a + Math.random() * (b - a);
+      const choose = arr => arr[Math.floor(Math.random() * arr.length)];
       const clamp = value => Math.max(0, Math.min(1, value));
+      const mix = (a, b, t) => a.map((v, i) => v + (b[i] - v) * t);
+      const hex = rgb => "#" + rgb.map(v => Math.round(clamp(v) * 255).toString(16).padStart(2, "0")).join("");
+      const background = [6 / 255, 2 / 255, 8 / 255];
+      const flash = [1, .77, .81];
+      const wine = [.58, 0, .09], crimson = [.90, .05, .14], blood = [.98, .10, .16];
 
-      function insideHeart(x, y) {
-        const a = x * x + y * y - 1;
-        return a * a * a - x * x * y * y * y <= 0;
+      // The same parametric boundary and scanline text placement used by the Python original.
+      function heartPoint(a) {
+        const x = 16 * Math.pow(Math.sin(a), 3);
+        const y = 13 * Math.cos(a) - 5 * Math.cos(2*a) - 2 * Math.cos(3*a) - Math.cos(4*a);
+        return [x * unit, y * unit];
       }
+      function intersections(y) {
+        const xs = [];
+        for (const [a, b] of edges) {
+          if ((a[1] <= y && y < b[1]) || (b[1] <= y && y < a[1])) {
+            xs.push(a[0] + (y - a[1]) * (b[0] - a[0]) / (b[1] - a[1]));
+          }
+        }
+        xs.sort((a, b) => a - b);
+        const spans = [];
+        for (let i = 0; i + 1 < xs.length; i += 2) spans.push([xs[i], xs[i + 1]]);
+        return spans;
+      }
+      function overlap(a, b) {
+        const spans = [];
+        for (const x of a) for (const z of b) {
+          const lo = Math.max(x[0], z[0]), hi = Math.min(x[1], z[1]);
+          if (hi - lo > 14) spans.push([lo, hi]);
+        }
+        return spans;
+      }
+      let polygon = [], edges = [], yTop = 0, yBottom = 0, centerY = 0;
 
       function resize() {
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        width = window.innerWidth;
-        height = window.innerHeight;
+        width = window.innerWidth; height = window.innerHeight;
         canvas.width = Math.round(width * dpr);
         canvas.height = Math.round(height * dpr);
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        scale = Math.min(width * 0.43 / 1.25, height * 0.32 / 1.15, 280);
-        scale = Math.max(42, scale);
-        makeHeart();
-        startAnimation();
+        unit = Math.min(width * .45 / 32, height * .44 / 34, 22.5);
+        unit = Math.max(5.6, unit);
+        centerY = height * .455;
+        buildHeart();
+        replayHeart();
       }
 
-      function makeHeart() {
-        spots = [];
-        const centerX = width / 2;
-        const centerY = height * 0.515;
-        const rowGap = Math.max(0.052, 8.5 / scale);
-        for (let y = 1.02; y >= -1.03; y -= rowGap) {
-          let start = null;
-          const step = Math.max(0.006, 2.4 / scale);
-          for (let x = -1.25; x <= 1.251; x += step) {
-            const inside = insideHeart(x, y);
-            if (inside && start === null) start = x;
-            if ((!inside || x + step > 1.25) && start !== null) {
-              const end = inside && x + step > 1.25 ? x : x - step;
-              const left = centerX + start * scale + 2;
-              const right = centerX + end * scale - 2;
-              const pixelY = centerY - y * scale;
-              let cursor = left + random(0, Math.min(8, Math.max(1, (right - left) * 0.08)));
-              let guard = 0;
-              while (cursor < right - 14 && guard < 80) {
-                guard++;
-                const text = pick(phrases);
-                const size = Math.max(6, Math.min(12, scale * 0.034 + random(0, 2.1)));
-                ctx.font = "700 " + size + "px Arial, 'Noto Sans Thai', sans-serif";
-                const textWidth = ctx.measureText(text).width;
-                if (cursor + textWidth > right) {
-                  if (right - cursor < 26) break;
-                  cursor += Math.max(4, (right - cursor) * 0.18);
-                  continue;
-                }
-                spots.push({
-                  x: cursor + textWidth / 2, y: pixelY, text, size,
-                  color: pick(colors), width: textWidth,
-                  delay: 0, offsetX: random(-8, 8), lift: random(12, 26),
-                  phase: random(0, Math.PI * 2), edge: Math.abs(start) > 0.7 || Math.abs(end) > 0.7
-                });
-                cursor += textWidth + random(3, 7);
+      function buildHeart() {
+        polygon = Array.from({length: 720}, (_, i) => heartPoint(2 * Math.PI * i / 720));
+        edges = polygon.map((p, i) => [p, polygon[(i + 1) % polygon.length]]);
+        yTop = Math.max(...polygon.map(p => p[1]));
+        yBottom = Math.min(...polygon.map(p => p[1]));
+        const rowHeight = Math.max(8.5, 17 * unit / 21);
+        const half = rowHeight / 2;
+        const sizes = [9, 10, 11, 12].map(v => Math.max(6, Math.min(12, v * unit / 21)));
+        const gap = Math.max(2, 7 * unit / 21);
+        const placed = [];
+        const fontFor = size => {
+          ctx.font = "700 " + size + "px Arial, 'Noto Sans Thai', sans-serif";
+        };
+
+        for (let y = yTop - half; y > yBottom + half; y -= rowHeight) {
+          const row = overlap(intersections(y + half), intersections(y - half));
+          for (const [rawLo, rawHi] of row) {
+            const lo = rawLo + 4, hi = rawHi - 4;
+            let cursor = lo + rand(0, Math.min(8, Math.max(1, (hi - lo) * .08)));
+            const line = [];
+            let guard = 0;
+            while (cursor < hi - 14 && guard++ < 120) {
+              let fit = null;
+              for (let attempt = 0; attempt < 10; attempt++) {
+                const text = choose(phrases), size = choose(sizes);
+                fontFor(size);
+                const w = ctx.measureText(text).width;
+                if (cursor + w <= hi) { fit = {text, size, w}; break; }
               }
-              start = null;
+              if (!fit) break;
+              line.push({x: cursor + fit.w / 2, y: centerY - y, text: fit.text, size: fit.size, edge: false});
+              cursor += fit.w + gap;
             }
+            if (line.length > 1) {
+              const last = line[line.length - 1];
+              const usedRight = last.x + ctx.measureText(last.text).width / 2;
+              const shift = Math.max(0, hi - usedRight);
+              line.forEach((p, i) => { p.x += shift * i / (line.length - 1); });
+            } else if (line.length === 1) {
+              line[0].x = centerXForLine(lo, hi);
+            }
+            line.forEach((p, i) => {
+              p.edge = i === 0 || i === line.length - 1;
+              p.offsetX = rand(-10, 10) * unit / 21;
+              p.lift = 34 * unit / 21;
+              p.phase = rand(0, Math.PI * 2);
+              p.delay = 0;
+              const radius = Math.min(1, Math.hypot(p.x - width / 2, (centerY - p.y)) / (16 * unit));
+              let base = mix(wine, crimson, .25 + .75 * radius);
+              base = mix(base, blood, rand(0, .35) + (p.edge ? .3 : 0));
+              p.color = base.map(v => Math.min(1, v));
+              p.radius = radius;
+              placed.push(p);
+            });
           }
         }
-        // Let the outside rows form first, then fill the middle.
-        spots.sort((a, b) => Math.abs(b.y - centerY) - Math.abs(a.y - centerY) + random(-2, 2));
-        const duration = reduceMotion ? 100 : 7600;
-        spots.forEach((spot, index) => { spot.delay = index / Math.max(1, spots.length - 1) * duration; });
+        // Start with the outer silhouette, then bring in the inner words.
+        const outer = placed.filter(p => p.edge);
+        const inner = placed.filter(p => !p.edge).sort((a, b) => b.radius - a.radius);
+        outer.sort((a, b) => Math.atan2(a.x - width / 2, centerY - a.y) - Math.atan2(b.x - width / 2, centerY - b.y));
+        spots = outer.concat(inner);
+        const duration = reduceMotion ? 100 : 10000;
+        spots.forEach((p, i) => { p.delay = i / Math.max(1, spots.length - 1) * duration; });
       }
 
-      function startAnimation() {
+      function centerXForLine(lo, hi) { return width / 2 + (lo + hi) / 2; }
+
+      function replayHeart() {
         cancelAnimationFrame(raf);
         startedAt = performance.now();
         raf = requestAnimationFrame(draw);
@@ -167,43 +230,64 @@
       function draw(now) {
         ctx.clearRect(0, 0, width, height);
         const elapsed = now - startedAt;
-        const duration = reduceMotion ? 100 : 7600;
+        const duration = reduceMotion ? 100 : 10000;
         for (const p of spots) {
           if (elapsed < p.delay) continue;
-          const progress = reduceMotion ? 1 : clamp((elapsed - p.delay) / 850);
+          const progress = reduceMotion ? 1 : clamp((elapsed - p.delay) / (42 * 16));
           const ease = 1 - Math.pow(1 - progress, 3);
           const x = p.x + p.offsetX * (1 - ease);
-          const y = p.y + p.lift * (1 - ease);
-          const pulse = reduceMotion ? 0 : Math.max(0, Math.sin(now / 560 + p.phase)) * 0.16;
+          const y = p.y - p.lift * (1 - ease);
+          const musicPulse = musicPlaying ? (.20 + .20 * Math.max(0, Math.sin(now / 170 + p.phase))) : 0;
+          const shimmer = reduceMotion ? 0 : Math.max(0, Math.sin(now / 560 + p.phase)) * .10;
+          const glow = musicPulse + shimmer;
           ctx.globalAlpha = ease;
-          ctx.font = "700 " + p.size + "px Arial, 'Noto Sans Thai', sans-serif";
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
-          ctx.fillStyle = "rgba(0,0,0,0.7)";
-          ctx.fillText(p.text, x + 1.3, y + 2);
-          ctx.shadowColor = p.color;
-          ctx.shadowBlur = 4 + pulse * 16;
-          ctx.fillStyle = p.color;
+          ctx.font = "700 " + p.size + "px Arial, 'Noto Sans Thai', sans-serif";
+          ctx.fillStyle = hex(mix(background, p.color, .3 * ease));
+          ctx.fillText(p.text, x + 1.5, y + 2);
+          ctx.shadowColor = hex(p.color);
+          ctx.shadowBlur = 3 + glow * 25;
+          ctx.fillStyle = hex(mix(background, p.color, Math.pow(ease, 1.5)));
           ctx.fillText(p.text, x, y);
-          if (pulse > 0.12 && p.edge) {
-            ctx.fillStyle = "rgba(255,225,235," + pulse + ")";
+          if (glow > .22 && p.edge) {
+            ctx.fillStyle = hex(mix(p.color, flash, Math.min(.65, glow)));
             ctx.fillText(p.text, x, y);
           }
           ctx.shadowBlur = 0;
           ctx.globalAlpha = 1;
         }
-        if (elapsed < duration + 900 || !reduceMotion) raf = requestAnimationFrame(draw);
+        // Keep the tiny shimmer alive after the heart has fully formed.
+        if (elapsed < duration + 700 || !reduceMotion || musicPlaying) raf = requestAnimationFrame(draw);
       }
 
-      replay.addEventListener("click", () => {
-        makeHeart();
-        startAnimation();
-      });
+      replay.addEventListener("click", () => { buildHeart(); replayHeart(); });
       let resizeTimer;
       window.addEventListener("resize", () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(resize, 120);
-      }, { passive: true });
+      }, {passive: true});
+
+      // SoundCloud's official player events drive the heart's stronger glow while music is playing.
+      function connectSoundCloud() {
+        if (!window.SC || !window.SC.Widget) return;
+        try {
+          const widget = window.SC.Widget(playerFrame);
+          widget.bind(window.SC.Widget.Events.PLAY, () => {
+            musicPlaying = true; music.classList.add("playing");
+            if (!raf) replayHeart();
+          });
+          widget.bind(window.SC.Widget.Events.PAUSE, () => {
+            musicPlaying = false; music.classList.remove("playing");
+          });
+          widget.bind(window.SC.Widget.Events.FINISH, () => {
+            musicPlaying = false; music.classList.remove("playing");
+          });
+          widget.bind(window.SC.Widget.Events.PLAY_PROGRESS, event => { musicPosition = event.currentPosition || 0; });
+        } catch (_) { /* The track remains usable through the embedded player even if its API is blocked. */ }
+      }
+      if (window.SC && window.SC.Widget) connectSoundCloud();
+      else window.addEventListener("load", connectSoundCloud, {once: true});
       resize();
     })();
   </script>
