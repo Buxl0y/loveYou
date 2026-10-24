@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffe5f0">
+  <meta name="description" content="A cute Kuromi-themed love question.">
+  <title>Do you love me? ♡</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --pink: #ff8ec2;
+      --pink-dark: #f04e9c;
+      --lilac: #ad8cf7;
+      --ink: #34213d;
+      --soft-ink: #8d6c91;
+      --paper: rgba(255,255,255,.86);
+    }
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; margin: 0; }
+    body {
+      min-height: 100svh;
+      overflow-x: hidden;
+      display: grid;
+      place-items: center;
+      padding: 22px 14px;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(255,255,255,.95) 0 5%, transparent 5.5%),
+        radial-gradient(circle at 84% 14%, rgba(255,255,255,.8) 0 4%, transparent 4.5%),
+        radial-gradient(circle at 83% 82%, rgba(210,192,255,.56), transparent 28%),
+        radial-gradient(circle at 7% 85%, rgba(255,194,221,.75), transparent 27%),
+        linear-gradient(145deg, #fff0f7, #ffe0ed 48%, #f3e9ff);
+      color: var(--ink);
+      font-family: ui-rounded, "Trebuchet MS", "Noto Sans Thai", system-ui, sans-serif;
+    }
+    .sparkles { position: fixed; inset: 0; overflow: hidden; pointer-events: none; }
+    .sparkle {
+      position: absolute; color: rgba(201, 103, 175, .42);
+      animation: floaty 5s ease-in-out infinite;
+      user-select: none;
+    }
+    .sparkle:nth-child(1) { top: 9%; left: 12%; font-size: 29px; animation-delay: -.5s; }
+    .sparkle:nth-child(2) { top: 17%; right: 12%; font-size: 22px; animation-delay: -2s; }
+    .sparkle:nth-child(3) { bottom: 12%; left: 16%; font-size: 34px; animation-delay: -3s; }
+    .sparkle:nth-child(4) { bottom: 19%; right: 11%; font-size: 28px; animation-delay: -1s; }
+    .sparkle:nth-child(5) { top: 51%; left: 5%; font-size: 18px; animation-delay: -2.6s; }
+    .sparkle:nth-child(6) { top: 57%; right: 6%; font-size: 20px; animation-delay: -.9s; }
+    .card {
+      position: relative; z-index: 1; width: min(100%, 470px);
+      padding: clamp(22px, 5vw, 34px) clamp(17px, 5vw, 35px) 26px;
+      text-align: center; border-radius: 32px;
+      background: var(--paper); border: 2px solid rgba(255,255,255,.92);
+      box-shadow: 0 22px 65px rgba(194, 100, 161, .21), inset 0 0 0 1px rgba(255,154,204,.22);
+      backdrop-filter: blur(12px);
+      animation: card-pop .7s cubic-bezier(.2,.9,.25,1.2) both;
+    }
+    .top-label {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 7px 13px; border-radius: 999px; color: #a14f94;
+      background: #fff0f8; border: 1px solid #ffd5e9;
+      font-size: 11px; font-weight: 800; letter-spacing: .14em;
+    }
+    h1 { margin: 17px 0 6px; font-size: clamp(28px, 7vw, 39px); line-height: 1.12; letter-spacing: -.04em; }
+    h1 .heart { color: var(--pink-dark); display: inline-block; animation: heartbeat 1.2s ease-in-out infinite; }
+    .subtitle { margin: 0; color: var(--soft-ink); font-size: 14px; line-height: 1.6; }
+    .character-wrap {
+      position: relative; width: clamp(155px, 42vw, 205px); aspect-ratio: 1;
+      margin: 17px auto 13px; display: grid; place-items: center;
+      border-radius: 47% 53% 50% 50% / 45% 46% 54% 55%;
+      background: linear-gradient(145deg, #ffe3f1, #f0e4ff);
+      box-shadow: inset 0 0 0 7px rgba(255,255,255,.6), 0 12px 27px rgba(211,111,175,.15);
+      transition: background .3s ease, transform .3s ease;
+    }
+    .character-wrap::before, .character-wrap::after {
+      content: "♡"; position: absolute; color: #f07eb9; font-size: 24px;
+      animation: floaty 3s ease-in-out infinite;
+    }
+    .character-wrap::before { top: 5px; right: 5px; }
+    .character-wrap::after { bottom: 9px; left: 5px; animation-delay: -1.4s; }
+    #kuromi {
+      width: 84%; height: 84%; object-fit: contain; border-radius: 16px;
+      filter: drop-shadow(0 8px 6px rgba(72,38,86,.11));
+      transition: filter .3s, transform .3s;
+    }
+    .angry-mark {
+      position: absolute; right: 12%; top: 3%; z-index: 2;
+      font-size: 34px; transform: rotate(11deg) scale(.3); opacity: 0;
+      transition: opacity .2s, transform .3s;
+    }
+    .character-wrap.is-angry { background: linear-gradient(145deg, #e5d7ff, #ffc9df); animation: angry-shake .34s ease-in-out 2; }
+    .character-wrap.is-angry #kuromi { filter: saturate(.7) contrast(1.1) drop-shadow(0 8px 6px rgba(72,38,86,.11)); transform: rotate(-3deg); }
+    .character-wrap.is-angry .angry-mark { opacity: 1; transform: rotate(11deg) scale(1); }
+    .message {
+      min-height: 48px; display: grid; place-items: center;
+      margin: 8px 0 18px; padding: 10px 12px; border-radius: 16px;
+      background: #fff5fa; border: 1px dashed #f7b9d9;
+      color: #875480; font-size: 14px; font-weight: 700; line-height: 1.5;
+    }
+    .buttons { min-height: 54px; display: flex; justify-content: center; align-items: center; gap: 13px; flex-wrap: wrap; }
+    .btn {
+      min-width: 115px; min-height: 48px; padding: 12px 22px; border: 0;
+      border-radius: 999px; font: inherit; font-weight: 900; font-size: 15px; cursor: pointer;
+      transition: transform .22s ease, box-shadow .22s ease, opacity .22s ease, min-width .22s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:focus-visible { outline: 3px solid #9b70ed; outline-offset: 4px; }
+    .yes {
+      color: white; background: linear-gradient(135deg, #ff80b8, #ed50a1);
+      box-shadow: 0 8px 18px rgba(239,76,157,.28);
+    }
+    .yes:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 11px 22px rgba(239,76,157,.36); }
+    .no { color: #72577b; background: #eee5f8; border: 1px solid #e1d2f3; box-shadow: 0 5px 12px rgba(92,59,122,.08); }
+    .no:hover { background: #e6d8f5; }
+    .no.is-shrinking { min-width: 0; padding: 9px 13px; }
+    .no[hidden] { display: none; }
+    .tiny-footer { margin-top: 20px; color: #b08dac; font-size: 10px; letter-spacing: .09em; }
+    .tiny-footer span { color: #f077b4; }
+    @keyframes floaty { 0%, 100% { transform: translateY(0) rotate(-8deg); } 50% { transform: translateY(-10px) rotate(8deg); } }
+    @keyframes heartbeat { 0%, 100% { transform: scale(1); } 45% { transform: scale(1.19); } }
+    @keyframes card-pop { from { opacity: 0; transform: translateY(16px) scale(.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes angry-shake { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-3deg); } 75% { transform: rotate(3deg); } }
+    @media (max-height: 760px) {
+      .card { padding-top: 19px; padding-bottom: 17px; }
+      .character-wrap { width: clamp(130px, 30vh, 175px); margin: 11px auto 9px; }
+      h1 { margin-top: 12px; }
+      .message { margin-bottom: 12px; }
+      .tiny-footer { margin-top: 13px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sparkles" aria-hidden="true">
+    <span class="sparkle">✦</span><span class="sparkle">♡</span><span class="sparkle">✧</span>
+    <span class="sparkle">♥</span><span class="sparkle">✧</span><span class="sparkle">♡</span>
+  </div>
+
+  <main class="card">
+    <div class="top-label">🖤 KUROMI'S LOVE CHECK 🖤</div>
+    <h1 id="headline">Do you love me? <span class="heart">♥</span></h1>
+    <p id="subtitle" class="subtitle">Choose carefully… Kuromi is watching you! ♡</p>
+
+    <div id="character-wrap" class="character-wrap">
+      <span class="angry-mark" aria-hidden="true">💢</span>
+      <img
+        id="kuromi"
+        src="https://pbs.twimg.com/media/GrLgS-CaAAAR0bJ.jpg"
+        alt="Kuromi surrounded by pink hearts"
+        referrerpolicy="no-referrer">
+    </div>
+
+    <div id="message" class="message" role="status" aria-live="polite">Be honest… do you love me? 🥺💗</div>
+
+    <div class="buttons">
+      <button id="yes-btn" class="btn yes" type="button">Yes! 💗</button>
+      <button id="no-btn" class="btn no" type="button">No 😈</button>
+    </div>
+
+    <div class="tiny-footer">MADE WITH <span>♥</span> & A LITTLE KUROMI MAGIC</div>
+  </main>
+
+  <script>
+    (() => {
+      const yesButton = document.getElementById("yes-btn");
+      const noButton = document.getElementById("no-btn");
+      const headline = document.getElementById("headline");
+      const subtitle = document.getElementById("subtitle");
+      const message = document.getElementById("message");
+      const characterWrap = document.getElementById("character-wrap");
+      const kuromi = document.getElementById("kuromi");
+
+      const happyImage = "https://pbs.twimg.com/media/GrLgS-CaAAAR0bJ.jpg";
+      const angryImage = "https://i.pinimg.com/736x/3e/40/93/3e4093f4d1cdf77bd02300a1fbdde017.jpg";
+      let noCount = 0;
+      let imageWasSwitched = false;
+
+      kuromi.addEventListener("error", () => {
+        if (!imageWasSwitched && kuromi.src !== happyImage) {
+          kuromi.src = happyImage;
+        }
+      });
+
+      noButton.addEventListener("click", () => {
+        noCount += 1;
+        characterWrap.classList.add("is-angry");
+        subtitle.textContent = "HEY!! That's not the answer I wanted! 💢";
+
+        if (!imageWasSwitched) {
+          imageWasSwitched = true;
+          kuromi.src = angryImage;
+          kuromi.alt = "Kuromi looking adorably angry";
+        }
+
+        if (noCount === 1) {
+          headline.innerHTML = "Whaaat?! <span class=\"heart\">💢</span>";
+          message.textContent = "เอ๋?! แน่ใจเหรอ ลองคิดใหม่อีกทีสิ! 🥺";
+          noButton.style.transform = "scale(.72) rotate(-8deg)";
+          noButton.classList.add("is-shrinking");
+        } else if (noCount === 2) {
+          headline.innerHTML = "Kuromi is mad! <span class=\"heart\">😾</span>";
+          message.textContent = "คุโรมิเริ่มงอนจริง ๆ แล้วนะ! กด Yes เถอะ 💜";
+          noButton.style.transform = "scale(.42) rotate(9deg)";
+          noButton.style.opacity = ".72";
+        } else {
+          headline.innerHTML = "No more NO! <span class=\"heart\">😈</span>";
+          message.textContent = "แงงง! ปุ่ม No หายไปแล้ว เหลือคำตอบที่น่ารักอยู่นะ 💗";
+          noButton.style.transform = "scale(.12)";
+          noButton.style.opacity = "0";
+          noButton.disabled = true;
+          noButton.setAttribute("aria-hidden", "true");
+          window.setTimeout(() => { noButton.hidden = true; }, 220);
+          yesButton.animate(
+            [{transform: "scale(1)"}, {transform: "scale(1.13)"}, {transform: "scale(1)"}],
+            {duration: 520, easing: "ease-out"}
+          );
+        }
+      });
+
+      yesButton.addEventListener("click", () => {
+        yesButton.disabled = true;
+        yesButton.textContent = "YAY!! 💗";
+        message.textContent = "I knew it! Let's go to our love page… ♡";
+        window.setTimeout(() => {
+          window.location.href = "index.html?autoplay=1&start=107";
+        }, 350);
+      });
+    })();
+  </script>
+</body>
+</html>
