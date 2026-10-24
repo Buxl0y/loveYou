@@ -147,7 +147,7 @@
         canvas.width = Math.round(width * dpr);
         canvas.height = Math.round(height * dpr);
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        unit = Math.min(width * .45 / 32, height * .44 / 34, 22.5);
+        unit = Math.min(width * .86 / 32, height * .82 / 34, 22.5);
         unit = Math.max(5.6, unit);
         centerY = height * .455;
         buildHeart();
@@ -189,13 +189,15 @@
             }
             if (line.length > 1) {
               const last = line[line.length - 1];
+              ctx.font = "700 " + last.size + "px Arial, 'Noto Sans Thai', sans-serif";
               const usedRight = last.x + ctx.measureText(last.text).width / 2;
               const shift = Math.max(0, hi - usedRight);
               line.forEach((p, i) => { p.x += shift * i / (line.length - 1); });
             } else if (line.length === 1) {
-              line[0].x = centerXForLine(lo, hi);
+              line[0].x = (lo + hi) / 2;
             }
             line.forEach((p, i) => {
+              p.x += width / 2;
               p.edge = i === 0 || i === line.length - 1;
               p.offsetX = rand(-10, 10) * unit / 21;
               p.lift = 34 * unit / 21;
@@ -219,9 +221,7 @@
         spots.forEach((p, i) => { p.delay = i / Math.max(1, spots.length - 1) * duration; });
       }
 
-      function centerXForLine(lo, hi) { return width / 2 + (lo + hi) / 2; }
-
-      function replayHeart() {
+            function replayHeart() {
         cancelAnimationFrame(raf);
         startedAt = performance.now();
         raf = requestAnimationFrame(draw);
