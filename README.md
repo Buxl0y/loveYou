@@ -8,16 +8,16 @@ A cute Kuromi-themed love-question page that leads into a glowing multilingual h
 
 Flow:
 1. The homepage asks **“Do you love me?”** with Kuromi artwork.
-2. Clicking **No** changes Kuromi to an angry mood, shrinks the button over three tries, then hides it.
-3. Clicking **Yes** opens the existing Love You animation and attempts to play **Angel (Radio Edit) — Massive Attack feat. Horace Andy** from **1:47**.
+2. Clicking **No** makes Kuromi angry, shrinks the No button over three tries, then hides it.
+3. Clicking **Yes** opens the animated heart and attempts to play **Angel (Radio Edit) — Massive Attack feat. Horace Andy** from **1:47**.
 
-The browser may block autoplay. If that happens, click the on-page **Start song from 1:47** button.
+The music artwork/player card has been removed from the heart page. The top-right button now returns to the homepage. The song attempts to play in the background; if the browser blocks autoplay, tap the heart area once to retry playback.
 
 ## Pages
 
 - `index.html` — homepage / Kuromi question
 - `start.html` — standalone copy of the question page
-- `love.html` — original animated heart with the YouTube player
+- `love.html` — animated heart and background soundtrack
 
 ## Run locally
 
