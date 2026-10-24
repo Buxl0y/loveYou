@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#060208">
+  <meta name="description" content="A glowing heart built from love phrases in 20 languages, with Angel (Radio Edit) by Massive Attack.">
+  <title>Love You ❤️</title>
+  <style>
+    :root { color-scheme: dark; --red: #f52f54; --pink: #ff8296; }
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; }
+    body {
+      overflow: hidden; background: #060208; color: #fff1f5;
+      font-family: Arial, "Noto Sans Thai", system-ui, sans-serif;
+    }
+    body::before {
+      content: ""; position: fixed; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse at 50% 46%, rgba(92, 0, 24, .16), transparent 48%), #060208;
+    }
+    #heart { position: fixed; inset: 0; display: block; width: 100%; height: 100%; }
+    .replay {
+      position: fixed; z-index: 3; top: max(14px, env(safe-area-inset-top)); right: 14px;
+      padding: 9px 13px; border-radius: 999px; border: 1px solid rgba(255,115,145,.34);
+      color: #ffdce5; background: rgba(18,5,12,.72); font: inherit; font-size: 12px;
+      cursor: pointer; backdrop-filter: blur(10px);
+    }
+    .replay:hover { background: rgba(85,9,30,.82); }
+    .replay:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; }
+    .music {
+      position: fixed; z-index: 3; right: 15px; bottom: max(15px, env(safe-area-inset-bottom));
+      width: min(310px, calc(100vw - 30px)); padding: 10px 11px 8px;
+      border: 1px solid rgba(255, 94, 132, .25); border-radius: 15px;
+      background: rgba(10, 4, 9, .88); box-shadow: 0 8px 40px rgba(0,0,0,.28);
+      backdrop-filter: blur(12px);
+    }
+    .track-head { display: flex; align-items: center; gap: 8px; margin: 0 2px 7px; }
+    .music-dot {
+      width: 7px; height: 7px; flex: 0 0 7px; border-radius: 50%; background: #ff496e;
+      box-shadow: 0 0 10px rgba(255, 73, 110, .7);
+    }
+    .music.playing .music-dot { animation: heartbeat .72s ease-in-out infinite alternate; }
+    .track-title { min-width: 0; font-size: 11px; color: #ffe7ed; line-height: 1.4; }
+    .track-subtitle { color: #a88a96; font-size: 10px; margin-top: 1px; }
+    .music iframe { display: block; width: 100%; height: 200px; border: 0; border-radius: 8px; background: #08030a; }
+    .start-music {
+      display: block; width: 100%; margin: 0 0 7px; padding: 9px 12px;
+      border: 1px solid rgba(255, 92, 130, .55); border-radius: 9px;
+      background: linear-gradient(135deg, rgba(132, 12, 43, .92), rgba(65, 7, 28, .95));
+      color: #fff0f4; font: inherit; font-size: 12px; font-weight: 650; cursor: pointer;
+    }
+    .start-music:hover { filter: brightness(1.15); }
+    .start-music:focus-visible { outline: 2px solid #ff9db3; outline-offset: 3px; }
+    .start-music[hidden] { display: none; }
+    .music-status { color: #bda1ad; font-size: 10px; margin: 0 2px 6px; line-height: 1.45; }
+    .music-status[hidden] { display: none; }
+    .music-link { display: block; margin: 5px 2px 0; color: #987f8a; font-size: 10px; text-decoration: none; }
+    .music-link:hover { color: #ffdce5; }
+    @keyframes heartbeat { from { transform: scale(.8); opacity: .7; } to { transform: scale(1.22); opacity: 1; } }
+    @media (max-width: 540px) {
+      .music { right: 50%; transform: translateX(50%); bottom: max(10px, env(safe-area-inset-bottom)); }
+      .music iframe { height: 200px; }
+      .replay { top: max(10px, env(safe-area-inset-top)); right: 10px; }
+    }
+    @media (max-height: 560px) {
+      .music { width: min(265px, calc(100vw - 24px)); right: 10px; bottom: 8px; padding: 7px; }
+      .music iframe { height: 200px; }
+      .track-head { margin-bottom: 4px; }
+      .track-subtitle, .music-link { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="heart" role="img" aria-label="A heart made of glowing I love you phrases in 20 languages."></canvas>
+  <button id="replay" class="replay" type="button">↻ Replay heart</button>
+
+  <aside id="music" class="music" aria-label="Music player">
+    <div class="track-head">
+      <span class="music-dot" aria-hidden="true"></span>
+      <div class="track-title">
+        Angel (Radio Edit)
+        <div class="track-subtitle">Massive Attack · feat. Horace Andy</div>
+      </div>
+    </div>
+    <p id="music-status" class="music-status">กำลังโหลดเพลงและพยายามเริ่มจาก 1:47 หากไม่มีเสียง ให้กดปุ่มเริ่มเพลง</p>
+    <button id="start-music" class="start-music" type="button">▶ เริ่มเพลงจาก 1:47</button>
+    <div id="youtube-player" title="Angel (Radio Edit) by Massive Attack feat. Horace Andy"></div>
+    <a class="music-link" href="https://www.youtube.com/watch?v=Jj_QBs5tQLM&amp;t=107s" target="_blank" rel="noopener noreferrer">เปิดเพลงบน YouTube จาก 1:47 ↗</a>
+  </aside>
+
+  <script>
+    (() => {
+      "use strict";
+      const canvas = document.getElementById("heart");
+      const ctx = canvas.getContext("2d");
+      const replay = document.getElementById("replay");
+      const music = document.getElementById("music");
+      const START_AT_SECONDS = 107;
+      let youtubePlayer = null;
+      let youtubeReady = false;
+      const startMusicButton = document.getElementById("start-music");
+      const musicStatus = document.getElementById("music-status");
+
+      const phrases = [
+        "I love you", "love you", "I love you", "Te amo", "love you",
+        "Seni seviyorum", "Je t'aime", "I love you", "Ich liebe dich",
+        "Ti amo", "Eu te amo", "Я тебя люблю", "사랑해", "愛してる",
+        "我爱你", "मैं तुमसे प्यार करता हूँ", "Σ' αγαπώ",
+        "Ik hou van jou", "Jag älskar dig", "Kocham cię",
+        "ฉันรักเธอ", "Anh yêu em", "Aku cinta kamu", "Я тебе кохаю"
+      ];
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let width = 0, height = 0, unit = 1, spots = [], raf = 0, startedAt = 0;
+      let musicPlaying = false, musicPosition = 0;
+      const rand = (a, b) => a + Math.random() * (b - a);
+      const choose = arr => arr[Math.floor(Math.random() * arr.length)];
+      const clamp = value => Math.max(0, Math.min(1, value));
+      const mix = (a, b, t) => a.map((v, i) => v + (b[i] - v) * t);
+      const hex = rgb => "#" + rgb.map(v => Math.round(clamp(v) * 255).toString(16).padStart(2, "0")).join("");
+      const background = [6 / 255, 2 / 255, 8 / 255];
+      const flash = [1, .77, .81];
+      const wine = [.58, 0, .09], crimson = [.90, .05, .14], blood = [.98, .10, .16];
+
+      // The same parametric boundary and scanline text placement used by the Python original.
+      function heartPoint(a) {
+        const x = 16 * Math.pow(Math.sin(a), 3);
+        const y = 13 * Math.cos(a) - 5 * Math.cos(2*a) - 2 * Math.cos(3*a) - Math.cos(4*a);
+        return [x * unit, y * unit];
+      }
+      function intersections(y) {
+        const xs = [];
+        for (const [a, b] of edges) {
+          if ((a[1] <= y && y < b[1]) || (b[1] <= y && y < a[1])) {
+            xs.push(a[0] + (y - a[1]) * (b[0] - a[0]) / (b[1] - a[1]));
+          }
+        }
+        xs.sort((a, b) => a - b);
+        const spans = [];
+        for (let i = 0; i + 1 < xs.length; i += 2) spans.push([xs[i], xs[i + 1]]);
+        return spans;
+      }
+      function overlap(a, b) {
+        const spans = [];
+        for (const x of a) for (const z of b) {
+          const lo = Math.max(x[0], z[0]), hi = Math.min(x[1], z[1]);
+          if (hi - lo > 14) spans.push([lo, hi]);
+        }
+        return spans;
+      }
+      let polygon = [], edges = [], yTop = 0, yBottom = 0, centerY = 0;
+
+      function resize() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        width = window.innerWidth; height = window.innerHeight;
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        unit = Math.min(width * .86 / 32, height * .82 / 34, 22.5);
+        unit = Math.max(5.6, unit);
+        centerY = height * .455;
+        buildHeart();
+        replayHeart();
+      }
+
+      function buildHeart() {
+        polygon = Array.from({length: 720}, (_, i) => heartPoint(2 * Math.PI * i / 720));
+        edges = polygon.map((p, i) => [p, polygon[(i + 1) % polygon.length]]);
+        yTop = Math.max(...polygon.map(p => p[1]));
+        yBottom = Math.min(...polygon.map(p => p[1]));
+        const rowHeight = Math.max(8.5, 17 * unit / 21);
+        const half = rowHeight / 2;
+        const sizes = [9, 10, 11, 12].map(v => Math.max(6, Math.min(12, v * unit / 21)));
+        const gap = Math.max(2, 7 * unit / 21);
+        const placed = [];
+        const fontFor = size => {
+          ctx.font = "700 " + size + "px Arial, 'Noto Sans Thai', sans-serif";
+        };
+
+        for (let y = yTop - half; y > yBottom + half; y -= rowHeight) {
+          const row = overlap(intersections(y + half), intersections(y - half));
+          for (const [rawLo, rawHi] of row) {
+            const lo = rawLo + 4, hi = rawHi - 4;
+            let cursor = lo + rand(0, Math.min(8, Math.max(1, (hi - lo) * .08)));
+            const line = [];
+            let guard = 0;
+            while (cursor < hi - 14 && guard++ < 120) {
+              let fit = null;
+              for (let attempt = 0; attempt < 10; attempt++) {
+                const text = choose(phrases), size = choose(sizes);
+                fontFor(size);
+                const w = ctx.measureText(text).width;
+                if (cursor + w <= hi) { fit = {text, size, w}; break; }
+              }
+              if (!fit) break;
+              line.push({x: cursor + fit.w / 2, y: centerY - y, text: fit.text, size: fit.size, edge: false});
+              cursor += fit.w + gap;
+            }
+            if (line.length > 1) {
+              const last = line[line.length - 1];
+              ctx.font = "700 " + last.size + "px Arial, 'Noto Sans Thai', sans-serif";
+              const usedRight = last.x + ctx.measureText(last.text).width / 2;
+              const shift = Math.max(0, hi - usedRight);
+              line.forEach((p, i) => { p.x += shift * i / (line.length - 1); });
+            } else if (line.length === 1) {
+              line[0].x = (lo + hi) / 2;
+            }
+            line.forEach((p, i) => {
+              p.x += width / 2;
+              p.edge = i === 0 || i === line.length - 1;
+              p.offsetX = rand(-10, 10) * unit / 21;
+              p.lift = 34 * unit / 21;
+              p.phase = rand(0, Math.PI * 2);
+              p.delay = 0;
+              const radius = Math.min(1, Math.hypot(p.x - width / 2, (centerY - p.y)) / (16 * unit));
+              let base = mix(wine, crimson, .25 + .75 * radius);
+              base = mix(base, blood, rand(0, .35) + (p.edge ? .3 : 0));
+              p.color = base.map(v => Math.min(1, v));
+              p.radius = radius;
+              placed.push(p);
+            });
+          }
+        }
+        // Start with the outer silhouette, then bring in the inner words.
+        const outer = placed.filter(p => p.edge);
+        const inner = placed.filter(p => !p.edge).sort((a, b) => b.radius - a.radius);
+        outer.sort((a, b) => Math.atan2(a.x - width / 2, centerY - a.y) - Math.atan2(b.x - width / 2, centerY - b.y));
+        spots = outer.concat(inner);
+        const duration = reduceMotion ? 100 : 10000;
+        spots.forEach((p, i) => { p.delay = i / Math.max(1, spots.length - 1) * duration; });
+      }
+
+            function replayHeart() {
+        cancelAnimationFrame(raf);
+        startedAt = performance.now();
+        raf = requestAnimationFrame(draw);
+      }
+
+      function draw(now) {
+        ctx.clearRect(0, 0, width, height);
+        const elapsed = now - startedAt;
+        const duration = reduceMotion ? 100 : 10000;
+        for (const p of spots) {
+          if (elapsed < p.delay) continue;
+          const progress = reduceMotion ? 1 : clamp((elapsed - p.delay) / (42 * 16));
+          const ease = 1 - Math.pow(1 - progress, 3);
+          const x = p.x + p.offsetX * (1 - ease);
+          const y = p.y - p.lift * (1 - ease);
+          const musicPulse = musicPlaying ? (.20 + .20 * Math.max(0, Math.sin(now / 170 + p.phase))) : 0;
+          const shimmer = reduceMotion ? 0 : Math.max(0, Math.sin(now / 560 + p.phase)) * .10;
+          const glow = musicPulse + shimmer;
+          ctx.globalAlpha = ease;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.font = "700 " + p.size + "px Arial, 'Noto Sans Thai', sans-serif";
+          ctx.fillStyle = hex(mix(background, p.color, .3 * ease));
+          ctx.fillText(p.text, x + 1.5, y + 2);
+          ctx.shadowColor = hex(p.color);
+          ctx.shadowBlur = 3 + glow * 25;
+          ctx.fillStyle = hex(mix(background, p.color, Math.pow(ease, 1.5)));
+          ctx.fillText(p.text, x, y);
+          if (glow > .22 && p.edge) {
+            ctx.fillStyle = hex(mix(p.color, flash, Math.min(.65, glow)));
+            ctx.fillText(p.text, x, y);
+          }
+          ctx.shadowBlur = 0;
+          ctx.globalAlpha = 1;
+        }
+        // Keep the tiny shimmer alive after the heart has fully formed.
+        if (elapsed < duration + 700 || !reduceMotion || musicPlaying) raf = requestAnimationFrame(draw);
+      }
+
+      replay.addEventListener("click", () => { buildHeart(); replayHeart(); });
+      let resizeTimer;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(resize, 120);
+      }, {passive: true});
+
+      // Use YouTube's official IFrame API so seeking to 1:47 happens after the player is actually ready.
+      function startSongFrom107() {
+        if (!youtubeReady || !youtubePlayer) {
+          musicStatus.hidden = false;
+          musicStatus.textContent = "กำลังโหลดตัวเล่นเพลงอยู่ รอสักครู่แล้วกดอีกครั้ง";
+          return;
+        }
+        try {
+          youtubePlayer.seekTo(START_AT_SECONDS, true);
+          youtubePlayer.playVideo();
+          musicStatus.hidden = false;
+          musicStatus.textContent = "กำลังเริ่ม Angel (Radio Edit) จาก 1:47…";
+        } catch (_) {
+          musicStatus.hidden = false;
+          musicStatus.textContent = "เริ่มเพลงไม่สำเร็จ ลองกดปุ่มอีกครั้งหรือเปิด YouTube";
+        }
+      }
+
+      startMusicButton.addEventListener("click", startSongFrom107);
+
+      window.onYouTubeIframeAPIReady = () => {
+        youtubePlayer = new YT.Player("youtube-player", {
+          width: "100%",
+          height: "200",
+          videoId: "Jj_QBs5tQLM",
+          playerVars: {
+            autoplay: 1,
+            start: START_AT_SECONDS,
+            controls: 1,
+            playsinline: 1,
+            rel: 0,
+            enablejsapi: 1,
+            origin: window.location.origin
+          },
+          events: {
+            onReady: event => {
+              youtubeReady = true;
+              // Try autoplay first; browser policy may require the user to tap the fallback button.
+              event.target.seekTo(START_AT_SECONDS, true);
+              event.target.playVideo();
+              musicStatus.hidden = false;
+              musicStatus.textContent = "ถ้าเพลงไม่เริ่มเอง ให้กด “เริ่มเพลงจาก 1:47”";
+            },
+            onStateChange: event => {
+              if (event.data === YT.PlayerState.PLAYING) {
+                musicPlaying = true;
+                music.classList.add("playing");
+                startMusicButton.hidden = true;
+                musicStatus.hidden = true;
+                if (!raf) replayHeart();
+              } else if (event.data === YT.PlayerState.PAUSED) {
+                musicPlaying = false;
+                music.classList.remove("playing");
+                startMusicButton.hidden = false;
+                musicStatus.hidden = false;
+                musicStatus.textContent = "เพลงหยุดอยู่ กดเริ่มเพลงเพื่อเล่นต่อจาก 1:47";
+              } else if (event.data === YT.PlayerState.ENDED) {
+                musicPlaying = false;
+                music.classList.remove("playing");
+                startMusicButton.hidden = false;
+                musicStatus.hidden = false;
+                musicStatus.textContent = "เพลงจบแล้ว กดเริ่มเพลงเพื่อเล่นจาก 1:47 อีกครั้ง";
+              }
+            },
+            onError: () => {
+              musicPlaying = false;
+              music.classList.remove("playing");
+              startMusicButton.hidden = false;
+              musicStatus.hidden = false;
+              musicStatus.textContent = "เล่นในหน้านี้ไม่ได้ ลองเปิดเพลงจากลิงก์ YouTube ด้านล่าง";
+            }
+          }
+        });
+      };
+
+      // Load the API only after the callback above exists, avoiding a race on fast connections.
+      if (window.YT && window.YT.Player) {
+        window.onYouTubeIframeAPIReady();
+      } else {
+        const youtubeApiScript = document.createElement("script");
+        youtubeApiScript.src = "https://www.youtube.com/iframe_api";
+        youtubeApiScript.async = true;
+        document.head.appendChild(youtubeApiScript);
+      }
+      resize();
+    })();
+  </script>
+</body>
+</html>
