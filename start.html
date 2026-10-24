@@ -138,9 +138,7 @@
   </div>
 
   <main class="card">
-    <div class="top-label">🖤 KUROMI'S LOVE CHECK 🖤</div>
     <h1 id="headline">Do you love me? <span class="heart">♥</span></h1>
-    <p id="subtitle" class="subtitle">Choose carefully… Kuromi is watching you! ♡</p>
 
     <div id="character-wrap" class="character-wrap">
       <span class="angry-mark" aria-hidden="true">💢</span>
@@ -150,8 +148,6 @@
         alt="Kuromi surrounded by pink hearts"
         referrerpolicy="no-referrer">
     </div>
-
-    <div id="message" class="message" role="status" aria-live="polite">Be honest… do you love me? 🥺💗</div>
 
     <div class="buttons">
       <button id="yes-btn" class="btn yes" type="button">Yes! 💗</button>
@@ -166,8 +162,6 @@
       const yesButton = document.getElementById("yes-btn");
       const noButton = document.getElementById("no-btn");
       const headline = document.getElementById("headline");
-      const subtitle = document.getElementById("subtitle");
-      const message = document.getElementById("message");
       const characterWrap = document.getElementById("character-wrap");
       const kuromi = document.getElementById("kuromi");
 
@@ -184,7 +178,6 @@
       noButton.addEventListener("click", () => {
         noCount += 1;
         characterWrap.classList.add("is-angry");
-        subtitle.textContent = "HEY!! That's not the answer I wanted! 💢";
 
         if (!imageWasSwitched) {
           imageWasSwitched = true;
@@ -194,17 +187,14 @@
 
         if (noCount === 1) {
           headline.innerHTML = "Whaaat?! <span class=\"heart\">💢</span>";
-          message.textContent = "เอ๋?! แน่ใจเหรอ ลองคิดใหม่อีกทีสิ! 🥺";
           noButton.style.transform = "scale(.72) rotate(-8deg)";
           noButton.classList.add("is-shrinking");
         } else if (noCount === 2) {
           headline.innerHTML = "Kuromi is mad! <span class=\"heart\">😾</span>";
-          message.textContent = "คุโรมิเริ่มงอนจริง ๆ แล้วนะ! กด Yes เถอะ 💜";
           noButton.style.transform = "scale(.42) rotate(9deg)";
           noButton.style.opacity = ".72";
         } else {
           headline.innerHTML = "No more NO! <span class=\"heart\">😈</span>";
-          message.textContent = "แงงง! ปุ่ม No หายไปแล้ว เหลือคำตอบที่น่ารักอยู่นะ 💗";
           noButton.style.transform = "scale(.12)";
           noButton.style.opacity = "0";
           noButton.disabled = true;
@@ -220,7 +210,6 @@
       yesButton.addEventListener("click", () => {
         yesButton.disabled = true;
         yesButton.textContent = "YAY!! 💗";
-        message.textContent = "I knew it! Let's go to our love page… ♡";
         window.setTimeout(() => {
           window.location.href = "love.html?autoplay=1&start=107";
         }, 350);
