@@ -158,7 +158,7 @@
       <button id="no-btn" class="btn no" type="button">No 😈</button>
     </div>
 
-    <div class="tiny-footer">MADE WITH <span>♥</span> & A LITTLE KUROMI MAGIC</div>
+    <div class="tiny-footer">KUROMI © SANRIO · MADE WITH <span>♥</span></div>
   </main>
 
   <script>
@@ -177,9 +177,8 @@
       let imageWasSwitched = false;
 
       kuromi.addEventListener("error", () => {
-        if (!imageWasSwitched && kuromi.src !== happyImage) {
-          kuromi.src = happyImage;
-        }
+        // If the angry illustration is unavailable, fall back to the official happy Kuromi image.
+        if (kuromi.src !== happyImage) kuromi.src = happyImage;
       });
 
       noButton.addEventListener("click", () => {
