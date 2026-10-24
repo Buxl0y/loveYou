@@ -1,18 +1,33 @@
-# Multilingual Love Heart ❤️
+# Love You ❤️
 
-A generative typographic art experiment in Python that renders a heart silhouette composed of "I love you" in 20 different languages, featuring smooth floating animations and a subtle shimmering effect.
+A multilingual heart animation made from “I love you” in 20 languages.
 
-<img width="1302" height="752" alt="WhatsApp Image 2026-10-09 at 09 53 02" src="https://github.com/user-attachments/assets/6c2ccffe-f46d-4b2f-9430-36a6a5739beb" />
+## Open the website
 
+After the **Deploy Love You website to GitHub Pages** workflow finishes successfully, visit:
 
-## Features
-- **Parametric Heart Boundary:** Uses a parametric heart curve to calculate exact scanline boundaries and text placement.
-- **Multilingual Typography:** Cycles dynamically through love phrases in 20 languages with proportional font scaling.
-- **Smooth Animation:** Eased vertical float-in transitions (`cubic ease-out`) with color grading from deep crimson to glowing edges.
-- **Post-Render Shimmer:** Continuous ambient glimmers on random phrases once drawing completes.
-- **Zero External Dependencies:** Built entirely with Python's standard library (`turtle`, `tkinter`, `math`, `random`).
+**https://buxl0y.github.io/loveYou/**
 
-## How to Run
+The website version is plain HTML, CSS, and JavaScript, so it runs in a browser on desktop and mobile without installing Python or other dependencies.
+
+## Run locally
+
+Open `index.html` in your browser, or start a simple local server from the repository folder:
+
+```bash
+python -m http.server 8000
+```
+
+Then visit http://localhost:8000.
+
+## Desktop Python version
+
+The original `love.py` desktop animation is preserved. It uses Python's standard library (`turtle` and `tkinter`) and can be run with:
 
 ```bash
 python love.py
+```
+
+## Deployment
+
+The GitHub Actions workflow in `.github/workflows/pages.yml` deploys the static website to GitHub Pages whenever `index.html`, the workflow, or this README changes on `main`. If Pages is not enabled in repository settings, enable it and select **GitHub Actions** as the build and deployment source.
