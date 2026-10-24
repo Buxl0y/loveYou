@@ -4,15 +4,13 @@ A multilingual heart animation made from “I love you” in 20 languages.
 
 ## Open the website
 
-After the **Deploy Love You website to GitHub Pages** workflow finishes successfully, visit:
+**Live website:** https://love-you-heart.onrender.com/
 
-**https://buxl0y.github.io/loveYou/**
-
-The website version is plain HTML, CSS, and JavaScript, so it runs in a browser on desktop and mobile without installing Python or other dependencies.
+The browser version uses HTML, CSS, and JavaScript, so it works on desktop and mobile without installing Python or other dependencies.
 
 ## Run locally
 
-Open `index.html` in your browser, or start a simple local server from the repository folder:
+Open `index.html` in your browser, or start a local server from the repository folder:
 
 ```bash
 python -m http.server 8000
@@ -30,4 +28,4 @@ python love.py
 
 ## Deployment
 
-The GitHub Actions workflow in `.github/workflows/pages.yml` deploys the static website to GitHub Pages whenever `index.html`, the workflow, or this README changes on `main`. If Pages is not enabled in repository settings, enable it and select **GitHub Actions** as the build and deployment source.
+The site is hosted as a Render Static Site and automatically redeploys from the `main` branch when repository changes are pushed.
