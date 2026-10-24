@@ -19,54 +19,32 @@
       background: radial-gradient(ellipse at 50% 46%, rgba(92, 0, 24, .16), transparent 48%), #060208;
     }
     #heart { position: fixed; inset: 0; display: block; width: 100%; height: 100%; }
-    .replay {
+    .home-button {
       position: fixed; z-index: 3; top: max(14px, env(safe-area-inset-top)); right: 14px;
       padding: 9px 13px; border-radius: 999px; border: 1px solid rgba(255,115,145,.34);
       color: #ffdce5; background: rgba(18,5,12,.72); font: inherit; font-size: 12px;
       cursor: pointer; backdrop-filter: blur(10px);
     }
-    .replay:hover { background: rgba(85,9,30,.82); }
-    .replay:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; }
-    .music {
-      position: fixed; z-index: 3; right: 15px; bottom: max(15px, env(safe-area-inset-bottom));
-      width: min(310px, calc(100vw - 30px)); padding: 10px 11px 8px;
-      border: 1px solid rgba(255, 94, 132, .25); border-radius: 15px;
-      background: rgba(10, 4, 9, .88); box-shadow: 0 8px 40px rgba(0,0,0,.28);
-      backdrop-filter: blur(12px);
+    .home-button:hover { background: rgba(85,9,30,.82); }
+    .home-button:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; }
+    .home-button {
+      position: fixed; z-index: 3; top: max(14px, env(safe-area-inset-top)); right: 14px;
+      padding: 9px 14px; border-radius: 999px; border: 1px solid rgba(255,115,145,.34);
+      color: #ffdce5; background: rgba(18,5,12,.78); font: inherit; font-size: 12px;
+      cursor: pointer; backdrop-filter: blur(10px);
     }
-    .track-head { display: flex; align-items: center; gap: 8px; margin: 0 2px 7px; }
-    .music-dot {
-      width: 7px; height: 7px; flex: 0 0 7px; border-radius: 50%; background: #ff496e;
-      box-shadow: 0 0 10px rgba(255, 73, 110, .7);
+    .home-button:hover { background: rgba(85,9,30,.9); }
+    .home-button:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; }
+    /* YouTube player engine for the soundtrack; no artwork/card shown on the page. */
+    #youtube-player {
+      position: fixed; left: -220px; top: 0; width: 200px; height: 200px;
+      opacity: 0; pointer-events: none; overflow: hidden;
     }
-    .music.playing .music-dot { animation: heartbeat .72s ease-in-out infinite alternate; }
-    .track-title { min-width: 0; font-size: 11px; color: #ffe7ed; line-height: 1.4; }
-    .track-subtitle { color: #a88a96; font-size: 10px; margin-top: 1px; }
-    .music iframe { display: block; width: 100%; height: 200px; border: 0; border-radius: 8px; background: #08030a; }
-    .start-music {
-      display: block; width: 100%; margin: 0 0 7px; padding: 9px 12px;
-      border: 1px solid rgba(255, 92, 130, .55); border-radius: 9px;
-      background: linear-gradient(135deg, rgba(132, 12, 43, .92), rgba(65, 7, 28, .95));
-      color: #fff0f4; font: inherit; font-size: 12px; font-weight: 650; cursor: pointer;
-    }
-    .start-music:hover { filter: brightness(1.15); }
-    .start-music:focus-visible { outline: 2px solid #ff9db3; outline-offset: 3px; }
-    .start-music[hidden] { display: none; }
-    .music-status { color: #bda1ad; font-size: 10px; margin: 0 2px 6px; line-height: 1.45; }
-    .music-status[hidden] { display: none; }
-    .music-link { display: block; margin: 5px 2px 0; color: #987f8a; font-size: 10px; text-decoration: none; }
-    .music-link:hover { color: #ffdce5; }
-    @keyframes heartbeat { from { transform: scale(.8); opacity: .7; } to { transform: scale(1.22); opacity: 1; } }
     @media (max-width: 540px) {
-      .music { right: 50%; transform: translateX(50%); bottom: max(10px, env(safe-area-inset-bottom)); }
-      .music iframe { height: 200px; }
-      .replay { top: max(10px, env(safe-area-inset-top)); right: 10px; }
+      .home-button { top: max(10px, env(safe-area-inset-top)); right: 10px; }
     }
     @media (max-height: 560px) {
-      .music { width: min(265px, calc(100vw - 24px)); right: 10px; bottom: 8px; padding: 7px; }
-      .music iframe { height: 200px; }
-      .track-head { margin-bottom: 4px; }
-      .track-subtitle, .music-link { display: none; }
+      .home-button { top: 8px; right: 10px; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
@@ -75,34 +53,18 @@
 </head>
 <body>
   <canvas id="heart" role="img" aria-label="A heart made of glowing I love you phrases in 20 languages."></canvas>
-  <button id="replay" class="replay" type="button">↻ Replay heart</button>
+  <button id="home-button" class="home-button" type="button">⌂ หน้าหลัก</button>
 
-  <aside id="music" class="music" aria-label="Music player">
-    <div class="track-head">
-      <span class="music-dot" aria-hidden="true"></span>
-      <div class="track-title">
-        Angel (Radio Edit)
-        <div class="track-subtitle">Massive Attack · feat. Horace Andy</div>
-      </div>
-    </div>
-    <p id="music-status" class="music-status">กำลังโหลดเพลงและพยายามเริ่มจาก 1:47 หากไม่มีเสียง ให้กดปุ่มเริ่มเพลง</p>
-    <button id="start-music" class="start-music" type="button">▶ เริ่มเพลงจาก 1:47</button>
-    <div id="youtube-player" title="Angel (Radio Edit) by Massive Attack feat. Horace Andy"></div>
-    <a class="music-link" href="https://www.youtube.com/watch?v=Jj_QBs5tQLM&amp;t=107s" target="_blank" rel="noopener noreferrer">เปิดเพลงบน YouTube จาก 1:47 ↗</a>
-  </aside>
+  <div id="youtube-player" aria-hidden="true"></div>
 
   <script>
     (() => {
       "use strict";
       const canvas = document.getElementById("heart");
       const ctx = canvas.getContext("2d");
-      const replay = document.getElementById("replay");
-      const music = document.getElementById("music");
       const START_AT_SECONDS = 107;
       let youtubePlayer = null;
       let youtubeReady = false;
-      const startMusicButton = document.getElementById("start-music");
-      const musicStatus = document.getElementById("music-status");
 
       const phrases = [
         "I love you", "love you", "I love you", "Te amo", "love you",
@@ -114,7 +76,7 @@
       ];
       const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       let width = 0, height = 0, unit = 1, spots = [], raf = 0, startedAt = 0;
-      let musicPlaying = false, musicPosition = 0;
+      let musicPlaying = false;
       const rand = (a, b) => a + Math.random() * (b - a);
       const choose = arr => arr[Math.floor(Math.random() * arr.length)];
       const clamp = value => Math.max(0, Math.min(1, value));
@@ -279,35 +241,30 @@
         resizeTimer = setTimeout(resize, 120);
       }, {passive: true});
 
-      // Use YouTube's official IFrame API so seeking to 1:47 happens after the player is actually ready.
+      // Attempt autoplay from 1:47. A tap on the heart retries if the browser blocks it.
       function startSongFrom107() {
-        if (!youtubeReady || !youtubePlayer) {
-          musicStatus.hidden = false;
-          musicStatus.textContent = "กำลังโหลดตัวเล่นเพลงอยู่ รอสักครู่แล้วกดอีกครั้ง";
-          return;
-        }
+        if (!youtubeReady || !youtubePlayer) return;
         try {
           youtubePlayer.seekTo(START_AT_SECONDS, true);
           youtubePlayer.playVideo();
-          musicStatus.hidden = false;
-          musicStatus.textContent = "กำลังเริ่ม Angel (Radio Edit) จาก 1:47…";
         } catch (_) {
-          musicStatus.hidden = false;
-          musicStatus.textContent = "เริ่มเพลงไม่สำเร็จ ลองกดปุ่มอีกครั้งหรือเปิด YouTube";
+          // Playback may require another user gesture.
         }
       }
 
-      startMusicButton.addEventListener("click", startSongFrom107);
+      document.getElementById("home-button").addEventListener("click", () => {
+        window.location.href = "index.html";
+      });
 
       window.onYouTubeIframeAPIReady = () => {
         youtubePlayer = new YT.Player("youtube-player", {
-          width: "100%",
+          width: "200",
           height: "200",
           videoId: "Jj_QBs5tQLM",
           playerVars: {
             autoplay: 1,
             start: START_AT_SECONDS,
-            controls: 1,
+            controls: 0,
             playsinline: 1,
             rel: 0,
             enablejsapi: 1,
@@ -316,45 +273,25 @@
           events: {
             onReady: event => {
               youtubeReady = true;
-              // Try autoplay first; browser policy may require the user to tap the fallback button.
+              event.target.mute();
               event.target.seekTo(START_AT_SECONDS, true);
+              event.target.unMute();
               event.target.playVideo();
-              musicStatus.hidden = false;
-              musicStatus.textContent = "ถ้าเพลงไม่เริ่มเอง ให้กด “เริ่มเพลงจาก 1:47”";
             },
             onStateChange: event => {
               if (event.data === YT.PlayerState.PLAYING) {
                 musicPlaying = true;
-                music.classList.add("playing");
-                startMusicButton.hidden = true;
-                musicStatus.hidden = true;
                 if (!raf) replayHeart();
-              } else if (event.data === YT.PlayerState.PAUSED) {
+              } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
                 musicPlaying = false;
-                music.classList.remove("playing");
-                startMusicButton.hidden = false;
-                musicStatus.hidden = false;
-                musicStatus.textContent = "เพลงหยุดอยู่ กดเริ่มเพลงเพื่อเล่นต่อจาก 1:47";
-              } else if (event.data === YT.PlayerState.ENDED) {
-                musicPlaying = false;
-                music.classList.remove("playing");
-                startMusicButton.hidden = false;
-                musicStatus.hidden = false;
-                musicStatus.textContent = "เพลงจบแล้ว กดเริ่มเพลงเพื่อเล่นจาก 1:47 อีกครั้ง";
               }
             },
-            onError: () => {
-              musicPlaying = false;
-              music.classList.remove("playing");
-              startMusicButton.hidden = false;
-              musicStatus.hidden = false;
-              musicStatus.textContent = "เล่นในหน้านี้ไม่ได้ ลองเปิดเพลงจากลิงก์ YouTube ด้านล่าง";
-            }
+            onError: () => { musicPlaying = false; }
           }
         });
       };
 
-      // Load the API only after the callback above exists, avoiding a race on fast connections.
+      // Declare the callback before the API is loaded.
       if (window.YT && window.YT.Player) {
         window.onYouTubeIframeAPIReady();
       } else {
@@ -363,6 +300,13 @@
         youtubeApiScript.async = true;
         document.head.appendChild(youtubeApiScript);
       }
+
+      canvas.addEventListener("pointerdown", () => {
+        if (!musicPlaying) startSongFrom107();
+      }, {passive: true});
+      window.addEventListener("keydown", event => {
+        if ((event.key === "Enter" || event.key === " ") && !musicPlaying) startSongFrom107();
+      });
       resize();
     })();
   </script>
