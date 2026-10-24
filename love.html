@@ -234,7 +234,6 @@
         if (elapsed < duration + 700 || !reduceMotion || musicPlaying) raf = requestAnimationFrame(draw);
       }
 
-      replay.addEventListener("click", () => { buildHeart(); replayHeart(); });
       let resizeTimer;
       window.addEventListener("resize", () => {
         clearTimeout(resizeTimer);
