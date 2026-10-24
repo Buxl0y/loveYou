@@ -91,7 +91,6 @@
     <a class="music-link" href="https://www.youtube.com/watch?v=Jj_QBs5tQLM&amp;t=107s" target="_blank" rel="noopener noreferrer">เปิดเพลงบน YouTube จาก 1:47 ↗</a>
   </aside>
 
-  <script src="https://www.youtube.com/iframe_api"></script>
   <script>
     (() => {
       "use strict";
@@ -354,6 +353,16 @@
           }
         });
       };
+
+      // Load the API only after the callback above exists, avoiding a race on fast connections.
+      if (window.YT && window.YT.Player) {
+        window.onYouTubeIframeAPIReady();
+      } else {
+        const youtubeApiScript = document.createElement("script");
+        youtubeApiScript.src = "https://www.youtube.com/iframe_api";
+        youtubeApiScript.async = true;
+        document.head.appendChild(youtubeApiScript);
+      }
       resize();
     })();
   </script>
