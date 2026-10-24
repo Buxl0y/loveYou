@@ -42,7 +42,7 @@
     .music.playing .music-dot { animation: heartbeat .72s ease-in-out infinite alternate; }
     .track-title { min-width: 0; font-size: 11px; color: #ffe7ed; line-height: 1.4; }
     .track-subtitle { color: #a88a96; font-size: 10px; margin-top: 1px; }
-    .music iframe { display: block; width: 100%; height: 85px; border: 0; border-radius: 8px; }
+    .music iframe { display: block; width: 100%; height: 200px; border: 0; border-radius: 8px; background: #08030a; }
     .start-music {
       display: block; width: 100%; margin: 0 0 7px; padding: 9px 12px;
       border: 1px solid rgba(255, 92, 130, .55); border-radius: 9px;
@@ -59,12 +59,12 @@
     @keyframes heartbeat { from { transform: scale(.8); opacity: .7; } to { transform: scale(1.22); opacity: 1; } }
     @media (max-width: 540px) {
       .music { right: 50%; transform: translateX(50%); bottom: max(10px, env(safe-area-inset-bottom)); }
-      .music iframe { height: 74px; }
+      .music iframe { height: 200px; }
       .replay { top: max(10px, env(safe-area-inset-top)); right: 10px; }
     }
     @media (max-height: 560px) {
       .music { width: min(265px, calc(100vw - 24px)); right: 10px; bottom: 8px; padding: 7px; }
-      .music iframe { height: 65px; }
+      .music iframe { height: 200px; }
       .track-head { margin-bottom: 4px; }
       .track-subtitle, .music-link { display: none; }
     }
@@ -85,19 +85,13 @@
         <div class="track-subtitle">Massive Attack · feat. Horace Andy</div>
       </div>
     </div>
-    <p id="music-status" class="music-status">กำลังพยายามเปิดเพลงจากนาทีที่ 1:47 อัตโนมัติ หากเบราว์เซอร์บล็อกเสียง ให้กดปุ่มนี้</p>
+    <p id="music-status" class="music-status">กำลังโหลดเพลงและพยายามเริ่มจาก 1:47 หากไม่มีเสียง ให้กดปุ่มเริ่มเพลง</p>
     <button id="start-music" class="start-music" type="button">▶ เริ่มเพลงจาก 1:47</button>
-    <iframe
-      id="soundcloud-player"
-      title="Play Angel (Radio Edit) by Massive Attack featuring Horace Andy, starting at 1 minute 47 seconds"
-      allow="autoplay; encrypted-media"
-      loading="eager"
-      src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fmassiveattack%2Fangel-radio-edit&amp;color=%23ff174f&amp;auto_play=true&amp;hide_related=true&amp;show_comments=false&amp;show_user=false&amp;show_reposts=false&amp;show_teaser=false&amp;visual=false">
-    </iframe>
-    <a class="music-link" href="https://soundcloud.com/massiveattack/angel-radio-edit" target="_blank" rel="noopener noreferrer">Open track on SoundCloud ↗</a>
+    <div id="youtube-player" title="Angel (Radio Edit) by Massive Attack feat. Horace Andy"></div>
+    <a class="music-link" href="https://www.youtube.com/watch?v=Jj_QBs5tQLM&amp;t=107s" target="_blank" rel="noopener noreferrer">เปิดเพลงบน YouTube จาก 1:47 ↗</a>
   </aside>
 
-  <script src="https://w.soundcloud.com/player/api.js"></script>
+  <script src="https://www.youtube.com/iframe_api"></script>
   <script>
     (() => {
       "use strict";
@@ -105,10 +99,12 @@
       const ctx = canvas.getContext("2d");
       const replay = document.getElementById("replay");
       const music = document.getElementById("music");
-      const playerFrame = document.getElementById("soundcloud-player");
+      const START_AT_SECONDS = 107;
+      let youtubePlayer = null;
+      let youtubeReady = false;
       const startMusicButton = document.getElementById("start-music");
       const musicStatus = document.getElementById("music-status");
-      const START_AT_MS = 107000;
+
       const phrases = [
         "I love you", "love you", "I love you", "Te amo", "love you",
         "Seni seviyorum", "Je t'aime", "I love you", "Ich liebe dich",
@@ -284,68 +280,80 @@
         resizeTimer = setTimeout(resize, 120);
       }, {passive: true});
 
-      // Try autoplay at 1:47 as soon as SoundCloud is ready. Browsers may still require a tap.
-      let soundcloudWidget = null;
-      let positionedAndPlayed = false;
-      function seekAndPlayFromStartPoint() {
-        if (!soundcloudWidget) {
-          musicStatus.textContent = "ตัวเล่นเพลงยังโหลดไม่เสร็จ ลองกดอีกครั้งในอีกสักครู่";
+      // Use YouTube's official IFrame API so seeking to 1:47 happens after the player is actually ready.
+      function startSongFrom107() {
+        if (!youtubeReady || !youtubePlayer) {
+          musicStatus.hidden = false;
+          musicStatus.textContent = "กำลังโหลดตัวเล่นเพลงอยู่ รอสักครู่แล้วกดอีกครั้ง";
           return;
         }
         try {
-          soundcloudWidget.seekTo(START_AT_MS);
-          soundcloudWidget.play();
-          musicStatus.textContent = "กำลังเปิด Angel (Radio Edit) จากนาทีที่ 1:47…";
+          youtubePlayer.seekTo(START_AT_SECONDS, true);
+          youtubePlayer.playVideo();
+          musicStatus.hidden = false;
+          musicStatus.textContent = "กำลังเริ่ม Angel (Radio Edit) จาก 1:47…";
         } catch (_) {
-          musicStatus.textContent = "เบราว์เซอร์อาจบล็อกเสียงอัตโนมัติ กดปุ่มเริ่มเพลงอีกครั้ง";
+          musicStatus.hidden = false;
+          musicStatus.textContent = "เริ่มเพลงไม่สำเร็จ ลองกดปุ่มอีกครั้งหรือเปิด YouTube";
         }
       }
 
-      startMusicButton.addEventListener("click", () => {
-        seekAndPlayFromStartPoint();
-      });
+      startMusicButton.addEventListener("click", startSongFrom107);
 
-      function connectSoundCloud() {
-        if (!window.SC || !window.SC.Widget || soundcloudWidget) return;
-        try {
-          soundcloudWidget = window.SC.Widget(playerFrame);
-          soundcloudWidget.bind(window.SC.Widget.Events.READY, () => {
-            // Explicitly seek before play; auto_play alone starts from the beginning.
-            if (!positionedAndPlayed) {
-              positionedAndPlayed = true;
-              seekAndPlayFromStartPoint();
+      window.onYouTubeIframeAPIReady = () => {
+        youtubePlayer = new YT.Player("youtube-player", {
+          width: "100%",
+          height: "200",
+          videoId: "Jj_QBs5tQLM",
+          playerVars: {
+            autoplay: 1,
+            start: START_AT_SECONDS,
+            controls: 1,
+            playsinline: 1,
+            rel: 0,
+            enablejsapi: 1,
+            origin: window.location.origin
+          },
+          events: {
+            onReady: event => {
+              youtubeReady = true;
+              // Try autoplay first; browser policy may require the user to tap the fallback button.
+              event.target.seekTo(START_AT_SECONDS, true);
+              event.target.playVideo();
+              musicStatus.hidden = false;
+              musicStatus.textContent = "ถ้าเพลงไม่เริ่มเอง ให้กด “เริ่มเพลงจาก 1:47”";
+            },
+            onStateChange: event => {
+              if (event.data === YT.PlayerState.PLAYING) {
+                musicPlaying = true;
+                music.classList.add("playing");
+                startMusicButton.hidden = true;
+                musicStatus.hidden = true;
+                if (!raf) replayHeart();
+              } else if (event.data === YT.PlayerState.PAUSED) {
+                musicPlaying = false;
+                music.classList.remove("playing");
+                startMusicButton.hidden = false;
+                musicStatus.hidden = false;
+                musicStatus.textContent = "เพลงหยุดอยู่ กดเริ่มเพลงเพื่อเล่นต่อจาก 1:47";
+              } else if (event.data === YT.PlayerState.ENDED) {
+                musicPlaying = false;
+                music.classList.remove("playing");
+                startMusicButton.hidden = false;
+                musicStatus.hidden = false;
+                musicStatus.textContent = "เพลงจบแล้ว กดเริ่มเพลงเพื่อเล่นจาก 1:47 อีกครั้ง";
+              }
+            },
+            onError: () => {
+              musicPlaying = false;
+              music.classList.remove("playing");
+              startMusicButton.hidden = false;
+              musicStatus.hidden = false;
+              musicStatus.textContent = "เล่นในหน้านี้ไม่ได้ ลองเปิดเพลงจากลิงก์ YouTube ด้านล่าง";
             }
-          });
-          soundcloudWidget.bind(window.SC.Widget.Events.PLAY, () => {
-            musicPlaying = true;
-            music.classList.add("playing");
-            startMusicButton.hidden = true;
-            musicStatus.hidden = true;
-            if (!raf) replayHeart();
-          });
-          soundcloudWidget.bind(window.SC.Widget.Events.PAUSE, () => {
-            musicPlaying = false;
-            music.classList.remove("playing");
-            startMusicButton.hidden = false;
-            musicStatus.hidden = false;
-            musicStatus.textContent = "เพลงหยุดอยู่ กดเริ่มเพลงเพื่อเล่นต่อจาก 1:47";
-          });
-          soundcloudWidget.bind(window.SC.Widget.Events.FINISH, () => {
-            musicPlaying = false;
-            music.classList.remove("playing");
-            startMusicButton.hidden = false;
-            musicStatus.hidden = false;
-          });
-          soundcloudWidget.bind(window.SC.Widget.Events.PLAY_PROGRESS, event => {
-            musicPosition = event.currentPosition || 0;
-          });
-        } catch (_) {
-          musicStatus.textContent = "โหลดตัวเล่นเพลงไม่ได้ ลองเปิดเพลงจากลิงก์ SoundCloud ด้านล่าง";
-        }
-      }
-
-      if (window.SC && window.SC.Widget) connectSoundCloud();
-      window.addEventListener("load", connectSoundCloud, {once: true});
+          }
+        });
+      };
       resize();
     })();
   </script>
